@@ -5,7 +5,7 @@
   "author": "CaptainDapper",
   "contact": "CaptainDapper#5940",
   "homepage": "https://www.patreon.com/captaindapper",
-  "description": "Concrete will place at your feet! Concrfeet?",
+  "description": "Concrete (and other tiles) will place at your feet! That's as simple as it gets. There is a blacklist in the mod settings so you don't use up all your stone in early game. Use the item name, not the tile name, in the blacklist (eg. stone-brick NOT stone-path).",
   "factorio_version": "1.1",
   "dependencies": ["base >= 1.1"]
 }
