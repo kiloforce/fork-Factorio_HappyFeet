@@ -47,8 +47,13 @@ end
 
 function UpdatePlayerBlacklist(player_index)
 	local blacklist_raw = game.players[player_index].mod_settings["tile-blacklist"].value
+	local bl = str.split(blacklist_raw,",")
 
-	global.playerBlacklists[player_index] = str.split(blacklist_raw,",")
+	for i = 1, #bl do
+		bl[i] = str.trim(bl[i])
+	end
+
+	global.playerBlacklists[player_index] = bl
 end
 
 local function On_PlayerPosition(event)

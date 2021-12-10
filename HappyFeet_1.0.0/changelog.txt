@@ -1,5 +1,15 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.0
-Date: 2021-12-07
+Date: 2021-12-10
   Changes:
     - Copied a bunch of code from a bunch of other mods.
+    - Slowly morphed said copied code into something working.
+    - Gained an unimaginable amount of knowledge from the discord mod channel. Thank you all <3
+    - Especially curiosity, justarandomgeek, raiguard, JanSharp, Honktown (urthabest), and even Bilka!
+  Features:
+    - Place tiles automagically when you walk!
+    - Said tiles won't even place on water!
+    - They'll also actually be removed from your inventory!
+    - And, the fastest tile you have will be placed!
+    - You can even block certain items from being place using the blacklist in mod settings! (defaults to "stone,stone-brick" since those are important early-game resources)
+    - This sick mod will even place over older tiles (stone-path => concrete) AND it'll refund said older tiles! NIFTY BUCKETS
