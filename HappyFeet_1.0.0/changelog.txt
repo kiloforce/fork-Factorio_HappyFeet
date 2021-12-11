@@ -1,6 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.0
+Date: 2021-12-11
+  New Features:
+    - Added setting to allow a radius of placement. Please note larger ranges will be harder on the game!
+---------------------------------------------------------------------------------------------------
 Version: 1.0.0
-Date: 2021-12-10
+Date: 2021-12-11
   Changes:
     - Copied a bunch of code from a bunch of other mods.
     - Slowly morphed said copied code into something working.

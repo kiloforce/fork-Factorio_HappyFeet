@@ -64,12 +64,35 @@ local function On_PlayerPosition(event)
 	end
 
 	local newTdata = FindTDataItemStacks(player) or false
-	local oldTile = player.surface.get_tile(player.position.x, player.position.y)
-
-	local canPlace = TileCanBePlaced(newTdata, player, oldTile)
-	if canPlace then
-		PlaceTileFromInventory(newTdata, player, oldTile)
+	if not newTdata then
+		return
 	end
+
+	local range = player.mod_settings["tile-range"]
+	local side = range*2-1
+	local items_avail = newTdata.inv_count
+
+	for y = player.position.y - (range-1) do
+		for x = player.position.x - (range-1) do
+			local oldTile = player.surface.get_tile(x, y)
+
+			local canPlace = TileCanBePlaced(newTdata, player, oldTile)
+			if canPlace then
+				PlaceTileFromInventory(newTdata, player, oldTile)
+			else
+				items_avail = items_avail + 1
+				--We didn't use up a tile so we can add this to our available item count.
+				--This isn't the clearest code, but since we are determining our position
+				--in the placement area via geometry instead of a variable counting items
+				--used, this addition will ensure that we don't run out before we're done
+			end
+
+			if side*(y-1) + x > items_avail then
+				goto out_of_resources
+			end if
+		end
+	end
+	::out_of_resources::
 end
 
 function TileCanBePlaced(newTdata, player, oldTile)
@@ -124,7 +147,9 @@ end
 function FindTDataItemStacks(player)
 	for i = 1, #global.happyData do
 		local tdata = global.happyData[i]
-		if player.get_main_inventory().find_item_stack(tdata.item_name) and not IsInPlayerBlacklist(player.index, tdata.item_name) then
+		local item_stack = player.get_main_inventory().find_item_stack(tdata.item_name)
+		if item_stack and not IsInPlayerBlacklist(player.index, tdata.item_name) then
+			tdata.inv_count = item_stack.count
 			return tdata
 		end
 	end
