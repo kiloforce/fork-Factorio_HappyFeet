@@ -68,16 +68,20 @@ local function On_PlayerPosition(event)
 		return
 	end
 
-	local range = player.mod_settings["tile-range"]
+	local range = player.mod_settings["tile-range"].value
 	local side = range*2-1
 	local items_avail = newTdata.inv_count
 
-	for y = player.position.y - (range-1) do
-		for x = player.position.x - (range-1) do
-			local oldTile = player.surface.get_tile(x, y)
+	for iy = -(range-1), (range-1) do
+		local y = iy + player.position.y
+		for ix = -(range-1), (range-1) do
+			local x = ix + player.position.x
 
+			local oldTile = player.surface.get_tile(x, y)
+			--log(ix .. "(" .. x .. ")" .. "," .. iy .. "(" .. y .. ")" .. " : " .. oldTile.name .. " : " .. items_avail)
 			local canPlace = TileCanBePlaced(newTdata, player, oldTile)
 			if canPlace then
+				--log("can place!")
 				PlaceTileFromInventory(newTdata, player, oldTile)
 			else
 				items_avail = items_avail + 1
@@ -87,9 +91,9 @@ local function On_PlayerPosition(event)
 				--used, this addition will ensure that we don't run out before we're done
 			end
 
-			if side*(y-1) + x > items_avail then
+			if side*(iy-1) + ix > items_avail then
 				goto out_of_resources
-			end if
+			end
 		end
 	end
 	::out_of_resources::
@@ -116,7 +120,7 @@ function TileCanBePlaced(newTdata, player, oldTile)
 
 	--Testing to see if the tile could normally be placed here.
 	--	It's Bit roundabout, but a great workaround was found! Thanks Honktown!
-	if player.surface.can_place_entity{name="tile-ghost", position=player.position, inner_name=newTdata.tile_name, force=player.force} then
+	if player.surface.can_place_entity{name="tile-ghost", position=oldTile.position, inner_name=newTdata.tile_name, force=player.force} then
 		return true
 	end
 
@@ -133,7 +137,7 @@ end
 function PlaceTileFromInventory(newTile, player, oldTile)
 	--This doesn't check anything; it just takes an item and plops it on the ground.
 	local removeTile = {name=newTile.item_name, count=1}
-	local placeTile = {{name=newTile.tile_name, position=player.position}}
+	local placeTile = {{name=newTile.tile_name, position=oldTile.position}}
 
 	if player.get_main_inventory().remove(removeTile) > 0 then
 		if game.tile_prototypes[oldTile.name].mineable_properties.minable then
