@@ -1,7 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.2
+Date: 2021-12-11
+  New Stuff:
+    - Added a setting so it's possible to ignore placement within Factorissimo buildings
+---------------------------------------------------------------------------------------------------
 Version: 1.1.0
 Date: 2021-12-11
-  New Features:
+  New Stuff:
     - Added setting to allow a radius of placement. Please note larger ranges will be harder on the game!
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.0

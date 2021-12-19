@@ -1,21 +1,14 @@
 local str = require('lib/strings')
 
 local function On_Initialize(event, forceful)
-	--On_Initialize the blacklists
-	global.playerBlacklists = global.playerBlacklists or {}
-	if (global.playerBlacklists == nil or forceful) then
-		global.playerBlacklists = {}
-	end
-
 	--We need to rebuild this each time, in case the prototypes have changed
-	RebuildHappyData()
-
-	UpdateAllBlacklists()
+	RebuildTileData()
+	RebuildBlacklists()
 end
 
-function RebuildHappyData()
-	global.happyData = {}
-	global.happyData_TileNameIndexed = {}
+function RebuildTileData()
+	global.tile_data = {}
+	global.tile_data_TileNameIndexed = {}
 	for _, item in pairs(game.item_prototypes) do
 		local tdata = {}
 		if item.place_as_tile_result ~= nil then
@@ -25,20 +18,21 @@ function RebuildHappyData()
 			tdata.tile_name = result.name
 			tdata.walking_speed_modifier = result.walking_speed_modifier
 
-			table.insert(global.happyData, tdata)
-			global.happyData_TileNameIndexed[tdata.tile_name] = tdata
+			table.insert(global.tile_data, tdata)
+			global.tile_data_TileNameIndexed[tdata.tile_name] = tdata
 		end
 	end
-	table.sort(global.happyData, function(a, b)
+	table.sort(global.tile_data, function(a, b)
 			return a.walking_speed_modifier > b.walking_speed_modifier
 		end)
 
-	-- for k,v in pairs(global.happyData) do
+	-- for k,v in pairs(global.tile_data) do
 	-- 	log(k .. " : " .. v.item_name .. " : " .. v.tile_name .. " : " .. v.walking_speed_modifier)
 	-- end
 end
 
-function UpdateAllBlacklists()
+function RebuildBlacklists()
+	global.playerBlacklists = {}
 	for player_index = 1, #game.players do
 		UpdatePlayerBlacklist(player_index)
 	end
@@ -78,10 +72,10 @@ local function On_PlayerPosition(event)
 			local x = ix + player.position.x
 
 			local oldTile = player.surface.get_tile(x, y)
-			--log(ix .. "(" .. x .. ")" .. "," .. iy .. "(" .. y .. ")" .. " : " .. oldTile.name .. " : " .. items_avail)
+			-- log(ix .. "(" .. x .. ")" .. "," .. iy .. "(" .. y .. ")" .. " : " .. oldTile.name .. " : " .. items_avail)
 			local canPlace = TileCanBePlaced(newTdata, player, oldTile)
 			if canPlace then
-				--log("can place!")
+				-- log("can place!")
 				PlaceTileFromInventory(newTdata, player, oldTile)
 			else
 				items_avail = items_avail + 1
@@ -113,9 +107,14 @@ function TileCanBePlaced(newTdata, player, oldTile)
 		return false
 	end
 
-	local oldTdata = global.happyData_TileNameIndexed[oldTile.name]
-	if oldTdata and WalkingSpeedIsGreater(oldTdata, newTdata) then
+	if WalkingSpeedIsGreater(oldTile, newTdata) then
 		return false
+	end
+
+	if player.mod_settings["happy-factorissimo"].value == false then
+		if player.surface.name:find("^Factory floor ") then
+			return false
+		end
 	end
 
 	--Testing to see if the tile could normally be placed here.
@@ -127,10 +126,20 @@ function TileCanBePlaced(newTdata, player, oldTile)
 	return false
 end
 
-function WalkingSpeedIsGreater(tdata1, tdata2)
-	if tdata1.walking_speed_modifier >= tdata2.walking_speed_modifier then
+function WalkingSpeedIsGreater(tile, tdata2)
+	-- local tdata1 = global.tile_data_TileNameIndexed[tile.name]
+	-- if tdata1 then
+	-- 	if tdata1.walking_speed_modifier >= tdata2.walking_speed_modifier then
+	-- 		return true
+	-- 	end
+	-- end
+
+	local tproto1 = tile.prototype
+	-- log(tproto1.name .. " : " .. tproto1.walking_speed_modifier .. " : " .. tdata2.walking_speed_modifier)
+	if tproto1.walking_speed_modifier >= tdata2.walking_speed_modifier then
 		return true
 	end
+
 	return false
 end
 
@@ -149,8 +158,11 @@ function PlaceTileFromInventory(newTile, player, oldTile)
 end
 
 function FindTDataItemStacks(player)
-	for i = 1, #global.happyData do
-		local tdata = global.happyData[i]
+	if not global.tile_data then
+		RebuildTileData()
+	end
+	for i = 1, #global.tile_data do
+		local tdata = global.tile_data[i]
 		local item_stack = player.get_main_inventory().find_item_stack(tdata.item_name)
 		if item_stack and not IsInPlayerBlacklist(player.index, tdata.item_name) then
 			tdata.inv_count = item_stack.count
@@ -172,8 +184,8 @@ function IsInPlayerBlacklist(player_index, item_name)
 end
 
 local function On_SettingsChanged(player_index)
-	UpdateAllBlacklists(player_index)
-	RebuildHappyData()
+	RebuildBlacklists(player_index)
+	RebuildTileData()
 end
 
 script.on_init(On_Initialize)

@@ -14,5 +14,12 @@ data:extend({
 		minimum_value = 0,
 		maximum_value = 25,
 		order = "01"
+	},
+	{
+		type = "bool-setting",
+		name = "happy-factorissimo",
+		setting_type = "runtime-per-user",
+		default_value = true,
+		order = "03"
 	}
 })
