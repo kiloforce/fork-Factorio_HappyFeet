@@ -1,6 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.3
+Date: 2021-12-18
+  New Stuff:
+    - Added setting for auto-pausing placement while in a vehicle
+  Changes:
+    - Made range settings accessible via hotkey instead of settings menu
+  Internal:
+    - Refactored code
+---------------------------------------------------------------------------------------------------
 Version: 1.1.2
-Date: 2021-12-11
+Date: 2021-12-17
   New Stuff:
     - Added a setting so it's possible to ignore placement within Factorissimo buildings
 ---------------------------------------------------------------------------------------------------
