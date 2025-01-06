@@ -4,15 +4,13 @@ local PlayerData = require('req/player_data')
 
 local function _GetRange(player_index)
 	PlayerData.LazyPlayer(player_index)
-	return global.player_data[player_index].range or 2
+	return storage.player_data[player_index].range or 2
 end
 
 local function _SetRange(player_index, value)
 	PlayerData.LazyPlayer(player_index)
-	global.player_data[player_index].range = value
+	storage.player_data[player_index].range = value
 end
-
-
 
 local function DrawRange(player_index, range)
 	local p = game.players[player_index]
@@ -20,16 +18,18 @@ local function DrawRange(player_index, range)
 		return
 	end
 
-	local tile_width = range*2-1
-	local vp = {tile_width / 2, tile_width / 2}
-	local vn = {tile_width / -2, tile_width / -2}
+	local tile_width = range * 2 - 1
+	local position = p.character.position  -- Get character's current position
+
+	-- Calculate the exact top-left and bottom-right positions
+	local left_top = {position.x - tile_width / 2, position.y - tile_width / 2}
+	local right_bottom = {position.x + tile_width / 2, position.y + tile_width / 2}
+
 	rendering.draw_rectangle {
 		color = {r = 0, g = 1, b = 0},
 		width = 1,
-		left_top = p.character,
-		left_top_offset = vn,
-		right_bottom = p.character,
-		right_bottom_offset = vp,
+		left_top = left_top,
+		right_bottom = right_bottom,
 		surface = p.surface,
 		time_to_live = 30,
 		players = {p}

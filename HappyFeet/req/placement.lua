@@ -51,7 +51,7 @@ local function PlaceTileFromInventory(newTile, player, oldTile)
 	local placeTile = {{name=newTile.tile_name, position=oldTile.position}}
 
 	if player.get_main_inventory().remove(removeTile) > 0 then
-		if game.tile_prototypes[oldTile.name].mineable_properties.minable then
+		if prototypes.tile[oldTile.name].mineable_properties.minable then
 			player.mine_tile(oldTile)
 		end
 

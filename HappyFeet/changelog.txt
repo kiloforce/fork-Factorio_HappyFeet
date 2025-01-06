@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.4
+Date: 2021-12-18
+  Changes:
+    - Properly check vehicle status on respawn- prevents being stuck in vehicle pause after dying in a tank
+  Internal:
+    - Updated for 2.0/Space Age
+---------------------------------------------------------------------------------------------------
 Version: 1.1.3
 Date: 2021-12-18
   New Stuff:

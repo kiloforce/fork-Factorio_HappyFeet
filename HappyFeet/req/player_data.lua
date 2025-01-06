@@ -1,13 +1,13 @@
 local function Lazy()
-	if not global.player_data then
-		global.player_data = {}
+	if not storage.player_data then
+		storage.player_data = {}
 	end
 end
 
 local function LazyPlayer(player_index)
 	Lazy()
-	if not global.player_data[player_index] then
-		global.player_data[player_index] = {}
+	if not storage.player_data[player_index] then
+		storage.player_data[player_index] = {}
 	end
 end
 

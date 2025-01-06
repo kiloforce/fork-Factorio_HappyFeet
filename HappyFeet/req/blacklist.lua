@@ -4,12 +4,12 @@ local PlayerData = require('req/player_data')
 
 local function _GetBlacklist(player_index)
 	PlayerData.LazyPlayer(player_index)
-	return global.player_data[player_index].blacklist or {"stone","stone-path"}
+	return storage.player_data[player_index].blacklist or {"stone","stone-path"}
 end
 
 local function _SetBlacklist(player_index, value)
 	PlayerData.LazyPlayer(player_index)
-	global.player_data[player_index].blacklist = value
+	storage.player_data[player_index].blacklist = value
 end
 
 

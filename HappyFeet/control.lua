@@ -33,7 +33,7 @@ local function On_DecreasePlacementRange(event)
 end
 
 local function On_VehicleChange(event)
-	Pause.VehiclePause(event.player_index, event.entity)
+	Pause.VehiclePause(event.player_index)
 end
 
 script.on_init(On_Initialize)
@@ -41,6 +41,7 @@ script.on_configuration_changed(On_Initialize)
 script.on_event(defines.events.on_player_changed_position, On_PlayerPosition)
 script.on_event(defines.events.on_runtime_mod_setting_changed, On_SettingsChanged)
 script.on_event(defines.events.on_player_driving_changed_state, On_VehicleChange)
+script.on_event(defines.events.on_player_respawned, On_VehicleChange) --Refreshes vehicle state on respawn.
 
 -- Handle hotkey presses.
 script.on_event('happyfeet-pause', On_PausePlacement)
